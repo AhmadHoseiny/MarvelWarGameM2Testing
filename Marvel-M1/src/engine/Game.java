@@ -1,12 +1,11 @@
 package engine;
 import java.awt.Point;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import exceptions.*;
 
+import exceptions.*;
 import model.abilities.Ability;
 import model.abilities.AreaOfEffect;
 import model.abilities.CrowdControlAbility;
@@ -255,8 +254,14 @@ public class Game {
 		return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 	}
 	 public Champion getCurrentChampion() {
+		// if(!turnOrder.isEmpty()){
+			 return (Champion)(turnOrder.peekMin());
+		
+		 /*}
+		 else{
+			 return null ;
+		 }*/
 		 
-		 return (Champion)(turnOrder.peekMin());
 	 }
 	 public Player checkGameOver() {
 		
@@ -366,7 +371,7 @@ public class Game {
 		 }
 		 
 	 }
-	 public Damageable getTarget(Champion curCH , Direction d ) {
+	 public Damageable getTarget(Champion curCH , Direction d ) throws InvalidTargetException {
 		 Point curLoc = curCH.getLocation();
 		 int attackRange = curCH.getAttackRange() ;
 		 for(int i=0 ; i<attackRange ; i++) {
@@ -389,6 +394,7 @@ public class Game {
 					 if(Grid[curLoc.x][curLoc.y] instanceof Champion) {
 						 if(checkSameTeam(curCH , (Champion) Grid[curLoc.x][curLoc.y] )) {
 							 return null ;
+							 //throw new InvalidTargetException("Invalid Target") ;
 						 }
 						 else {
 							 return (Damageable) Grid[curLoc.x][curLoc.y] ;
@@ -433,10 +439,8 @@ public class Game {
 		 else {
 			 curCH.setCurrentActionPoints(curCH.getCurrentActionPoints() -2);
 			 Damageable target = getTarget(curCH , d);
-			 if(target == null) {
-				 throw new InvalidTargetException("Invalid Target") ;
-			 }
-			 else {
+			 if( target != null) {
+				// throw new InvalidTargetException("Invalid Target") ;
 				 if(target instanceof Cover) {
 					 dealNormalDamage(curCH,target) ;
 				 }
@@ -474,7 +478,10 @@ public class Game {
 				 }
 				 
 			 }
-		 }
+			 }
+			// else {
+				
+		 //}
 		 
 	 }
 	 // end of attack and its helpers
@@ -819,33 +826,37 @@ public class Game {
 	 
 	 public void useLeaderAbility() throws LeaderNotCurrentException, LeaderAbilityAlreadyUsedException {
 		 Champion curCH = getCurrentChampion();
-		 Champion leader1 = getFirstPlayer().getLeader();
-		 Champion leader2 = getSecondPlayer().getLeader();
-		 ArrayList<Champion> team1 = getFirstPlayer().getTeam();
-		 ArrayList<Champion> team2 = getSecondPlayer().getTeam();
-		 
-		 if(!curCH.equals(leader1) && !curCH.equals(leader2)) {
-			 throw new LeaderNotCurrentException("This champion isn't the leader!");
-		 }
-		 else {
-			 if((curCH.equals(leader1) && isFirstLeaderAbilityUsed()) || 
-					 (curCH.equals(leader2) && isSecondLeaderAbilityUsed()) )
-				 throw new LeaderAbilityAlreadyUsedException("Leader Ability already used!");
-			 else {
-				 ArrayList<Champion>targets = new ArrayList<>();
-				 if(curCH.equals(leader1)) {
-					 targets = getLeaderTargets(curCH,leader2,team1,team2);
-				 }
-				 else {
-					 targets = getLeaderTargets(curCH,leader2,team2,team1);
-				 }
-				 curCH.useLeaderAbility(targets);
+		 //if(curCH != null){
+			 Champion leader1 = getFirstPlayer().getLeader();
+			 Champion leader2 = getSecondPlayer().getLeader();
+			 ArrayList<Champion> team1 = getFirstPlayer().getTeam();
+			 ArrayList<Champion> team2 = getSecondPlayer().getTeam();
+			 
+			 if(!curCH.equals(leader1) && !curCH.equals(leader2)) {
+				 throw new LeaderNotCurrentException("This champion isn't the leader!");
 			 }
-		 }
+			 else {
+				 if((curCH.equals(leader1) && isFirstLeaderAbilityUsed()) || 
+						 (curCH.equals(leader2) && isSecondLeaderAbilityUsed()) )
+					 throw new LeaderAbilityAlreadyUsedException("Leader Ability already used!");
+				 else {
+					 ArrayList<Champion>targets = new ArrayList<>();
+					 if(curCH.equals(leader1)) {
+						 targets = getLeaderTargets(curCH,leader2,team1,team2);
+					 }
+					 else {
+						 targets = getLeaderTargets(curCH,leader2,team2,team1);
+					 }
+					 curCH.useLeaderAbility(targets);
+				 }
+			 }
+		 //}
+		 
 	 }
 	 public boolean update(Champion c , Condition oldCondition) {
 		 boolean res = true ;
-		 for(Effect e : c.getAppliedEffects()) {
+		 for(/*Effect e : c.getAppliedEffects()*/ int i=0 ; i<c.getAppliedEffects().size() ; i++) {
+			 Effect e = c.getAppliedEffects().get(i) ;
 			 e.setDuration(e.getDuration() -1);
 			 if(e.getDuration() == 0) {
 				 e.remove(c);

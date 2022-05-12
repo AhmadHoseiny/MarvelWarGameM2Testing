@@ -25,6 +25,11 @@ public class PriorityQueue {
 	public Comparable remove() {
 		nItems--;
 		return elements[nItems];
+		/*nItems--;
+		if(nItems>=0 && nItems< elements.length)
+			return elements[nItems];
+		else
+			return null ;*/
 	}
 
 	public boolean isEmpty() {
@@ -37,6 +42,10 @@ public class PriorityQueue {
 
 	public Comparable peekMin() {
 		return elements[nItems - 1];
+		/*if(nItems>=0 && nItems< elements.length)
+			return elements[nItems - 1];
+		else
+			return null ;*/
 	}
 
 	public int size() {
