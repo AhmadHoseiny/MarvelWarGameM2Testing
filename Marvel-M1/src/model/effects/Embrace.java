@@ -26,7 +26,7 @@ public class Embrace extends Effect {
 		//int decS = (int)( c.getSpeed()/1.2) ;
 		c.setSpeed((int)(c.getSpeed()/1.2)) ;
 		//int decAD = (int)( c.getAttackDamage()/1.2) ;
-		c.setMana((int)(c.getAttackDamage()/1.2)) ;
+		c.setAttackDamage( (int) (c.getAttackDamage()/1.2));
 		//not finished yet 
 	}
 }

@@ -485,7 +485,25 @@ public class Game {
 		 
 	 }
 	 // end of attack and its helpers
-	//start of first castAbility and its Helpers  
+	//start of first castAbility and its Helpers 
+	 
+	 
+	 // a method that removes Shielded target from the final arraylist of targets 
+	 //on which an ability should be executed (this method is added after tests) 
+	 public void removeShieldedTargets(ArrayList<Damageable> targets){
+		 for(Damageable da : targets){
+			 if(da instanceof Champion ){
+				 Champion curTarget = (Champion) da ;
+				 for(int i=0 ; i<curTarget.getAppliedEffects().size() ; i++){
+					 Effect curE = curTarget.getAppliedEffects().get(i) ;
+					 if(curE instanceof Shield){
+						 targets.remove(curTarget) ;
+						 curE.remove(curTarget);
+					 }
+				 }
+			 }
+		 }
+	 }
 	public boolean checkCanCastAbility(Champion c ,Ability a) {
 		if(c.getMana() < a.getManaCost() || c.getCurrentActionPoints() < a.getRequiredActionPoints()
 				||c.getCondition().equals(Condition.INACTIVE) || 
@@ -601,6 +619,10 @@ public class Game {
 				 if(good) {
 					 ArrayList<Damageable> targets = new ArrayList<>() ;
 					 targets.add(curCH) ;
+					 
+					 // added because of tests
+					 removeShieldedTargets(targets) ;
+					 
 					 a.execute(targets);
 				 }
 			 }
@@ -623,7 +645,14 @@ public class Game {
 								 targets.add(c2) ;
 							 }
 						 }
+						 /*
+						 // added because of tests
+						 removeShieldedTargets(targets) ;
+						 */
 						 a.execute(targets);
+
+						 
+						 
 					 }
 					 else {
 						 ArrayList<Damageable> targets = new ArrayList<>() ;
@@ -632,6 +661,10 @@ public class Game {
 								 targets.add(c2) ;
 							 }
 						 }
+						 /*
+						 // added because of tests
+						 removeShieldedTargets(targets) ;
+						 */
 						 a.execute(targets);
 					 }
 				 }
@@ -639,13 +672,18 @@ public class Game {
 					 if(a.getCastArea().equals(AreaOfEffect.SURROUND)) {
 						 ArrayList<Damageable> potenialTargets = getSurroundTargets(curCH);
 						 if(potenialTargets.isEmpty()) {
-							throw new InvalidTargetException("Invalid target!");
+							//throw new InvalidTargetException("Invalid target!");
 						 }
 						 else {
 							 ArrayList<Damageable>finalTargets = validAbilityTargets(curCH,a,potenialTargets);
-							 if(finalTargets.isEmpty())
-								 throw new InvalidTargetException("Invalid target!");
+							 if(finalTargets.isEmpty()){
+								//throw new InvalidTargetException("Invalid target!"); 
+							 }
 							 else {
+								 /*
+								 // added because of tests
+								 removeShieldedTargets(finalTargets) ;
+								 */
 								 a.execute(finalTargets);
 							 }
 						 }
@@ -662,7 +700,7 @@ public class Game {
 		 Object Grid[][] = this.getBoard();
 		 
 		 //1st implementation (a champion can act as a cover) 
-		 boolean good = checkGoodAbility(a) ;
+		/* boolean good = checkGoodAbility(a) ;
 		 for(int i=0 ; i<range ; i++) {
 			 switch(d) {
 			 case RIGHT : curLoc.y++;break;
@@ -695,10 +733,10 @@ public class Game {
 				 }
 				 
 			 }
-		 }
+		 }*/
 		 
 		 //2nd implementation (a champion cannot act as a cover)
-		 /*for(int i=0 ; i<range ; i++) {
+		 for(int i=0 ; i<range ; i++) {
 			 switch(d) {
 			 case RIGHT : curLoc.y++;break;
 			 case LEFT : curLoc.y--;break;
@@ -716,7 +754,7 @@ public class Game {
 				 }
 				 
 			 }
-		 }*/
+		 }
 	
 		 return res;
 	 }
@@ -742,6 +780,10 @@ public class Game {
 				 ArrayList<Damageable>finalTargets = validAbilityTargets(curCH,a,potenialTargets);
 				 if(finalTargets.isEmpty())
 					 throw new InvalidTargetException("Invalid Target!");
+				 /*
+				 // added because of tests
+				 removeShieldedTargets(finalTargets) ;
+				 */
 				 a.execute(finalTargets);
 				 
 			 }
@@ -784,6 +826,10 @@ public class Game {
 											ab.setCurrentCooldown(ab.getBaseCooldown());
 										}
 								 }
+								 /*
+								 // added because of tests
+								 removeShieldedTargets(TargetArr) ;
+								 */
 								a.execute(TargetArr);
 							} 
 							 
