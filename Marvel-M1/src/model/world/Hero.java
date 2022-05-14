@@ -12,8 +12,8 @@ public class Hero extends Champion {
 	public void useLeaderAbility(ArrayList<Champion> targets) {
 		for(Champion c : targets) {
 			ArrayList<Effect> curE = c.getAppliedEffects();
-			for(Effect e : curE /* int i=0 ; i<curE.size() ; i++*/) {
-				//Effect e = curE.get(i) ;
+			for(/*Effect e : curE */ int i=0 ; i<curE.size() ; i++) {
+				Effect e = curE.get(i) ;
 				if(e.getType().equals(EffectType.DEBUFF)) {
 					e.remove(c);
 				}		

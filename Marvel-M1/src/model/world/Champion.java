@@ -140,7 +140,7 @@ public abstract class Champion implements Damageable , Comparable<Champion> {
 	}
 	
 	
-	@Override
+	/*@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -158,10 +158,10 @@ public abstract class Champion implements Damageable , Comparable<Champion> {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + speed;
 		return result;
-	}
+	}*/
 
 	@Override
-	public boolean equals(Object obj) {
+	/*public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -208,9 +208,9 @@ public abstract class Champion implements Damageable , Comparable<Champion> {
 		if (speed != other.speed)
 			return false;
 		return true;
-	}
+	}*/
 
-	@Override
+	//@Override
 	public int compareTo(Champion c) {
 		if(this.getSpeed() > c.getSpeed())
 			return -1;

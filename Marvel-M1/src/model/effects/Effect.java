@@ -40,11 +40,15 @@ public abstract class Effect implements Cloneable {
 		boolean f1I = false;
 		boolean f2R = false;
 		for(Effect e : Effects) {
-			if(e instanceof Stun)
+			if(e instanceof Stun){
 				f1I = true;
+			}
+				
 			else {
-				if(e instanceof Root)
+				if(e instanceof Root){
 					f2R = true;
+				}
+					
 			}
 		}
 		if(f1I)

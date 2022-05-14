@@ -12,13 +12,13 @@ public class Embrace extends Effect {
 	}
 	public void apply(Champion c){
 		c.getAppliedEffects().add(this) ;
-		int incHP = (int) 0.2 * c.getMaxHP() ;
+		int incHP = (int) (0.2 * c.getMaxHP()) ;
 		c.setCurrentHP(c.getCurrentHP() + incHP); 
-		int incM = (int) 0.2 * c.getMana() ;
+		int incM = (int) (0.2 * c.getMana()) ;
 		c.setMana(c.getMana()+incM) ;
-		int incS = (int) 0.2 * c.getSpeed() ;
+		int incS = (int) (0.2 * c.getSpeed()) ;
 		c.setSpeed(c.getSpeed()+incS) ;
-		int incAD = (int) 0.2 * c.getAttackDamage();
+		int incAD = (int) (0.2 * c.getAttackDamage());
 		c.setAttackDamage(c.getAttackDamage() + incAD);
 	}
 	public void remove(Champion c){
