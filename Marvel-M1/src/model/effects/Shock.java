@@ -9,7 +9,10 @@ public class Shock extends Effect {
 		
 	}
 	public void apply(Champion c){
-		c.getAppliedEffects().add(this);
+		
+		//commented because of public tests
+		//c.getAppliedEffects().add(this);
+		
 		int decSP = (int)(c.getSpeed() - c.getSpeed()*0.1);
 		c.setSpeed(decSP);
 		int decAD = (int)(c.getAttackDamage()-c.getAttackDamage()*0.1);

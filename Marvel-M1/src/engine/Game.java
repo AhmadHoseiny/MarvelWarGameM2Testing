@@ -254,13 +254,13 @@ public class Game {
 		return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 	}
 	 public Champion getCurrentChampion() {
-		// if(!turnOrder.isEmpty()){
+		 if(!turnOrder.isEmpty()){
 			 return (Champion)(turnOrder.peekMin());
 		
-		 /*}
+		 }
 		 else{
 			 return null ;
-		 }*/
+		 }
 		 
 	 }
 	 public Player checkGameOver() {
@@ -348,28 +348,31 @@ public class Game {
 	 }
 	 public void move(Direction d) throws NotEnoughResourcesException, UnallowedMovementException{
 		 Champion curCH = getCurrentChampion();
-		 if(curCH.getCurrentActionPoints() < 1) {
-			 throw new NotEnoughResourcesException("Not enough ActoinPoints!");
-		 }
-		 else {
-			 if(!checkValidMove(curCH,d)) {
-				 throw new UnallowedMovementException("Unallowed Movement!");
+		 if(curCH != null){
+			 if(curCH.getCurrentActionPoints() < 1) {
+				 throw new NotEnoughResourcesException("Not enough ActoinPoints!");
 			 }
 			 else {
-				 Point oldLoc = new Point(curCH.getLocation().x , curCH.getLocation().y) ;
-				 switch(d) {
-				 case RIGHT : curCH.getLocation().y++;break;
-				 case LEFT : curCH.getLocation().y--;break;
-				 case UP : curCH.getLocation().x++;break;
-				 case DOWN : curCH.getLocation().x--;break;
-				 default : break;
+				 if(!checkValidMove(curCH,d)) {
+					 throw new UnallowedMovementException("Unallowed Movement!");
 				 }
-				 curCH.setCurrentActionPoints(curCH.getCurrentActionPoints() - 1);
-				 Object [][] Grid  = getBoard() ;
-				 Grid[oldLoc.x][oldLoc.y] = null ;
-				 Grid[curCH.getLocation().x][curCH.getLocation().y] = curCH ; 
+				 else {
+					 Point oldLoc = new Point(curCH.getLocation().x , curCH.getLocation().y) ;
+					 switch(d) {
+					 case RIGHT : curCH.getLocation().y++;break;
+					 case LEFT : curCH.getLocation().y--;break;
+					 case UP : curCH.getLocation().x++;break;
+					 case DOWN : curCH.getLocation().x--;break;
+					 default : break;
+					 }
+					 curCH.setCurrentActionPoints(curCH.getCurrentActionPoints() - 1);
+					 Object [][] Grid  = getBoard() ;
+					 Grid[oldLoc.x][oldLoc.y] = null ;
+					 Grid[curCH.getLocation().x][curCH.getLocation().y] = curCH ; 
+				 }
 			 }
 		 }
+		
 	 }
 	 //end of move & it's helpers
 	 
@@ -470,6 +473,7 @@ public class Game {
 	 }
 	 public boolean checkAttackableTarget(Champion target) {
 		 //boolean res = true ;
+		// ArrayList <Effect> toBeRemoved = new ArrayList<>() ;
 		 for(Effect e : target.getAppliedEffects()) {
 			 if(e instanceof Shield) {
 				 e.remove(target); // according to shield effect explanation
@@ -485,59 +489,63 @@ public class Game {
 				 }
 			 }
 		 }
+		 
 		 return true ;
 	 }
 	 public void attack(Direction d) throws NotEnoughResourcesException ,
 	 	ChampionDisarmedException, InvalidTargetException{
 		 Champion curCH = getCurrentChampion() ;
-		 if(!checkCanAttack(curCH) ) {
-			 return ;
-		 }
-		 else {
-			 curCH.setCurrentActionPoints(curCH.getCurrentActionPoints() -2);
-			 Damageable target = getTarget(curCH , d);
-			 if( target != null) {
-				// throw new InvalidTargetException("Invalid Target") ;
-				 if(target instanceof Cover) {
-					 dealNormalDamage(curCH,target) ;
-				 }
-				 else {
-					 if(target instanceof Champion) {
-						 Champion targetCH = (Champion) target ;
-						 if(checkAttackableTarget(targetCH)){
-							 if(curCH instanceof Hero) {
-								 if(targetCH instanceof Villain || targetCH instanceof AntiHero ) {
-									 dealExtraDamage(curCH , targetCH) ;
-								 }
-								 else {
-									 dealNormalDamage(curCH , targetCH) ;
-								 }
-							 }
-							 else {
-								 if(curCH instanceof Villain) {
-									 if(targetCH instanceof Hero || targetCH instanceof AntiHero) {
-										 dealExtraDamage(curCH , targetCH) ;
-									 }
-									 else {
-										 dealNormalDamage(curCH , targetCH) ;
-									 }
-								 }
-								 else {
-									 if(targetCH instanceof Hero || targetCH instanceof Villain ) {
-										 dealExtraDamage(curCH , targetCH) ;
-									 }
-									 else {
-										 dealNormalDamage(curCH , targetCH) ;
-									 }
-								 }
-							 }
-						 }
-						
+		 if(curCH != null){
+			 if(!checkCanAttack(curCH) ) {
+				 return ;
+			 }
+			 else {
+				 curCH.setCurrentActionPoints(curCH.getCurrentActionPoints() -2);
+				 Damageable target = getTarget(curCH , d);
+				 if( target != null) {
+					// throw new InvalidTargetException("Invalid Target") ;
+					 if(target instanceof Cover) {
+						 dealNormalDamage(curCH,target) ;
 					 }
+					 else {
+						 if(target instanceof Champion) {
+							 Champion targetCH = (Champion) target ;
+							 if(checkAttackableTarget(targetCH)){
+								 if(curCH instanceof Hero) {
+									 if(targetCH instanceof Villain || targetCH instanceof AntiHero ) {
+										 dealExtraDamage(curCH , targetCH) ;
+									 }
+									 else {
+										 dealNormalDamage(curCH , targetCH) ;
+									 }
+								 }
+								 else {
+									 if(curCH instanceof Villain) {
+										 if(targetCH instanceof Hero || targetCH instanceof AntiHero) {
+											 dealExtraDamage(curCH , targetCH) ;
+										 }
+										 else {
+											 dealNormalDamage(curCH , targetCH) ;
+										 }
+									 }
+									 else {
+										 if(targetCH instanceof Hero || targetCH instanceof Villain ) {
+											 dealExtraDamage(curCH , targetCH) ;
+										 }
+										 else {
+											 dealNormalDamage(curCH , targetCH) ;
+										 }
+									 }
+								 }
+							 }
+							
+						 }
+					 }
+					 
 				 }
-				 
-			 }
-			 }
+				 }
+		 }
+		
 			
 		 
 	 }
@@ -553,19 +561,35 @@ public class Game {
 	 public void removeShieldedTargetsIfDamagingAbility(ArrayList<Damageable> targets, Ability a){
 		 
 		 if (a instanceof DamagingAbility) {
+			 
+			 
+			 
+			ArrayList<Champion> toBeRemovedCH = new ArrayList<>() ; 
+			ArrayList<Effect> toBeRemovedEf = new ArrayList<>() ;
 			for (Damageable da : targets) {
 				if (da instanceof Champion) {
 					Champion curTarget = (Champion) da;
 					for (int i = 0; i < curTarget.getAppliedEffects().size(); i++) {
 						Effect curE = curTarget.getAppliedEffects().get(i);
 						if (curE instanceof Shield) {
-							targets.remove(curTarget);
-							curE.remove(curTarget);
+							toBeRemovedCH.add(curTarget) ;
+							toBeRemovedEf.add(curE) ;
+							//targets.remove(curTarget);
+							//curE.remove(curTarget);
 						}
 					}
 				}
 			}
-		}
+			for(int i=0 ; i<toBeRemovedCH.size() && i<toBeRemovedEf.size() ; i++){
+				targets.remove(toBeRemovedCH.get(i)) ;
+				toBeRemovedEf.get(i).remove(toBeRemovedCH.get(i));
+			}
+		 
+			
+			
+			
+		 
+		 }
 	 }
 	 /*
 	 //by analogy with attack --> for private tests
@@ -685,119 +709,122 @@ public class Game {
 	 public void castAbility(Ability a) throws AbilityUseException,InvalidTargetException ,
 	 		CloneNotSupportedException, NotEnoughResourcesException{
 		 Champion curCH = getCurrentChampion();
-		 if(! checkCanCastAbility(curCH,a)) {
-			//commented because now "checkCanCastAbility" will only return true
-			 //and if there is an Exception, it will be thrown from inside the method itself
-			 /*throw new AbilityUseException("You're in a condition that "
-			 		+ "prevents you from casting an ability") ;*/
-			// return ;
-		 }
-		 else {
-			 curCH.setCurrentActionPoints(curCH.getCurrentActionPoints()-a.getRequiredActionPoints());
-			 curCH.setMana(curCH.getMana()-a.getManaCost()) ;
-			 for(Ability ab : curCH.getAbilities() ) {
-					if(ab.getName().equals(a.getName())) {
-						ab.setCurrentCooldown(ab.getBaseCooldown());
-					}
-			 }
-			 boolean good = checkGoodAbility(a);
-			 if(a.getCastArea().equals(AreaOfEffect.SELFTARGET)) {
-				 if(good) {
-					 ArrayList<Damageable> targets = new ArrayList<>() ;
-					 targets.add(curCH) ;
-					 
-					 
-						// added because of tests
-					 removeShieldedTargetsIfDamagingAbility(targets, a) ;
-						 
-						 
-					 a.execute(targets);
-					 removeDeadDamageablesAfterAttackOrAbility() ;
-					 //removeDamagedCoversAfterCastingAbility() ;
-				 }
-			 }
-			 else {
-				 if(a.getCastArea().equals(AreaOfEffect.TEAMTARGET)) {
-					 ArrayList<Champion> curTeam ;
-					 ArrayList<Champion> oppTeam ;
-					 if(getFirstPlayer().getTeam().contains(curCH)) {
-						 curTeam = getFirstPlayer().getTeam();
-						 oppTeam = getSecondPlayer().getTeam();
-					 }
-					 else {
-						 curTeam = getSecondPlayer().getTeam();
-						 oppTeam = getFirstPlayer().getTeam();
-					 }
-					 if(good) {
-						 ArrayList<Damageable> targets = new ArrayList<>() ;
-						 for(Champion c2  : curTeam) {
-							 if(MnDist(c2.getLocation() , curCH.getLocation()) <= a.getCastRange()) {
-								 targets.add(c2) ;
-							 }
-						 }
-						 if(targets.isEmpty()){
-							 return ;
-							 //throw new AbilityUseException("Can't use an Ability") ;
-						 }
-						 
-						 // added because of tests
-						 removeShieldedTargetsIfDamagingAbility(targets, a) ;
-						 
-						 
-						 a.execute(targets);
-						 removeDeadDamageablesAfterAttackOrAbility() ;
-						 //removeDamagedCoversAfterCastingAbility() ;
-
-					 }
-					 else {
-						 ArrayList<Damageable> targets = new ArrayList<>() ;
-						 for(Champion c2  : oppTeam) {
-							 if(MnDist(c2.getLocation() , curCH.getLocation()) <= a.getCastRange()) {
-								 targets.add(c2) ;
-							 }
-						 }
-						 if(targets.isEmpty()){
-							 return ;
-							 //throw new AbilityUseException("Can't use an Ability") ;
-						 }
-						 
-						// added because of tests
-						 removeShieldedTargetsIfDamagingAbility(targets, a) ;
-						 
-						 
-						 a.execute(targets);
-						 removeDeadDamageablesAfterAttackOrAbility() ;
-						 //removeDamagedCoversAfterCastingAbility() ;
-					 }
+		 if(curCH != null){
+			 if(! checkCanCastAbility(curCH,a)) {
+					//commented because now "checkCanCastAbility" will only return true
+					 //and if there is an Exception, it will be thrown from inside the method itself
+					 //throw new AbilityUseException("You're in a condition that "
+					 	//	+ "prevents you from casting an ability") ;
+					// return ;
 				 }
 				 else {
-					 if(a.getCastArea().equals(AreaOfEffect.SURROUND)) {
-						 ArrayList<Damageable> potenialTargets = getSurroundTargets(curCH);
-						 if(potenialTargets.isEmpty()) {
-							//throw new InvalidTargetException("Invalid target!");
+					 curCH.setCurrentActionPoints(curCH.getCurrentActionPoints()-a.getRequiredActionPoints());
+					 curCH.setMana(curCH.getMana()-a.getManaCost()) ;
+					 for(Ability ab : curCH.getAbilities() ) {
+							if(ab.getName().equals(a.getName())) {
+								ab.setCurrentCooldown(ab.getBaseCooldown());
+							}
+					 }
+					 boolean good = checkGoodAbility(a);
+					 if(a.getCastArea().equals(AreaOfEffect.SELFTARGET)) {
+						 if(good) {
+							 ArrayList<Damageable> targets = new ArrayList<>() ;
+							 targets.add(curCH) ;
+							 
+							 
+								// added because of tests
+							 removeShieldedTargetsIfDamagingAbility(targets, a) ;
+								 
+								 
+							 a.execute(targets);
+							 removeDeadDamageablesAfterAttackOrAbility() ;
+							 //removeDamagedCoversAfterCastingAbility() ;
 						 }
-						 else {
-							 ArrayList<Damageable>finalTargets = validAbilityTargets(curCH,a,potenialTargets);
-							 if(finalTargets.isEmpty()){
-								//throw new InvalidTargetException("Invalid target!"); 
+					 }
+					 else {
+						 if(a.getCastArea().equals(AreaOfEffect.TEAMTARGET)) {
+							 ArrayList<Champion> curTeam ;
+							 ArrayList<Champion> oppTeam ;
+							 if(getFirstPlayer().getTeam().contains(curCH)) {
+								 curTeam = getFirstPlayer().getTeam();
+								 oppTeam = getSecondPlayer().getTeam();
 							 }
 							 else {
+								 curTeam = getSecondPlayer().getTeam();
+								 oppTeam = getFirstPlayer().getTeam();
+							 }
+							 if(good) {
+								 ArrayList<Damageable> targets = new ArrayList<>() ;
+								 for(Champion c2  : curTeam) {
+									 if(MnDist(c2.getLocation() , curCH.getLocation()) <= a.getCastRange()) {
+										 targets.add(c2) ;
+									 }
+								 }
+								 if(targets.isEmpty()){
+									 return ;
+									 //throw new AbilityUseException("Can't use an Ability") ;
+								 }
+								 
+								 // added because of tests
+								 removeShieldedTargetsIfDamagingAbility(targets, a) ;
 								 
 								 
-									// added because of tests
-								 removeShieldedTargetsIfDamagingAbility(finalTargets, a) ;
-									 
-									 
-								 a.execute(finalTargets);
+								 a.execute(targets);
+								 removeDeadDamageablesAfterAttackOrAbility() ;
+								 //removeDamagedCoversAfterCastingAbility() ;
+
+							 }
+							 else {
+								 ArrayList<Damageable> targets = new ArrayList<>() ;
+								 for(Champion c2  : oppTeam) {
+									 if(MnDist(c2.getLocation() , curCH.getLocation()) <= a.getCastRange()) {
+										 targets.add(c2) ;
+									 }
+								 }
+								 if(targets.isEmpty()){
+									 return ;
+									 //throw new AbilityUseException("Can't use an Ability") ;
+								 }
+								 
+								// added because of tests
+								 removeShieldedTargetsIfDamagingAbility(targets, a) ;
+								 
+								 
+								 a.execute(targets);
 								 removeDeadDamageablesAfterAttackOrAbility() ;
 								 //removeDamagedCoversAfterCastingAbility() ;
 							 }
 						 }
+						 else {
+							 if(a.getCastArea().equals(AreaOfEffect.SURROUND)) {
+								 ArrayList<Damageable> potenialTargets = getSurroundTargets(curCH);
+								 if(potenialTargets.isEmpty()) {
+									//throw new InvalidTargetException("Invalid target!");
+								 }
+								 else {
+									 ArrayList<Damageable>finalTargets = validAbilityTargets(curCH,a,potenialTargets);
+									 if(finalTargets.isEmpty()){
+										//throw new InvalidTargetException("Invalid target!"); 
+									 }
+									 else {
+										 
+										 
+											// added because of tests
+										 removeShieldedTargetsIfDamagingAbility(finalTargets, a) ;
+											 
+											 
+										 a.execute(finalTargets);
+										 removeDeadDamageablesAfterAttackOrAbility() ;
+										 //removeDamagedCoversAfterCastingAbility() ;
+									 }
+								 }
+							 }
+						 }
 					 }
+					 
 				 }
-			 }
-			 
 		 }
+	
 	 }
 	 public ArrayList<Damageable> getDirectionalTargets(Champion curCH, Ability a,Direction d){
 		 Point curLoc = new Point(curCH.getLocation().x ,curCH.getLocation().y) ;
@@ -903,41 +930,44 @@ public class Game {
 	 	InvalidTargetException, CloneNotSupportedException, NotEnoughResourcesException {
 		 if(a.getCastArea().equals(AreaOfEffect.DIRECTIONAL)) {
 			 Champion curCH = getCurrentChampion();
-			 if(!checkCanCastAbility(curCH , a)) {
-				//commented because now "checkCanCastAbility" will only return true
-				 //and if there is an Exception, it will be thrown from inside the method itself
-				 /*throw new AbilityUseException("You're in a condition that "
-				 		+ "prevents you from casting an ability") ;*/
+			 if(curCH != null){
+				 if(!checkCanCastAbility(curCH , a)) {
+						//commented because now "checkCanCastAbility" will only return true
+						 //and if there is an Exception, it will be thrown from inside the method itself
+						 /*throw new AbilityUseException("You're in a condition that "
+						 		+ "prevents you from casting an ability") ;*/
+					 }
+					 else {
+						 curCH.setCurrentActionPoints(curCH.getCurrentActionPoints()-a.getRequiredActionPoints());
+						 curCH.setMana(curCH.getMana()-a.getManaCost()) ;
+						 for(Ability ab : curCH.getAbilities() ) {
+								if(ab.getName().equals(a.getName())) {
+									ab.setCurrentCooldown(ab.getBaseCooldown());
+								}
+						 }
+						
+						 ArrayList<Damageable>potenialTargets = getDirectionalTargets(curCH,a,d);
+						 if(potenialTargets.isEmpty())
+							 return ;
+							 //throw new InvalidTargetException("Invalid Target!");
+						 ArrayList<Damageable>finalTargets = validAbilityTargets(curCH,a,potenialTargets);
+						 if(finalTargets.isEmpty())
+							 return ;
+							 //throw new InvalidTargetException("Invalid Target!");
+						  
+						
+						 
+							// added because of tests
+						 removeShieldedTargetsIfDamagingAbility(finalTargets, a) ;
+							 
+							 
+						 a.execute(finalTargets);
+						 removeDeadDamageablesAfterAttackOrAbility() ;
+						 //removeDamagedCoversAfterCastingAbility() ;
+						 
+					 }
 			 }
-			 else {
-				 curCH.setCurrentActionPoints(curCH.getCurrentActionPoints()-a.getRequiredActionPoints());
-				 curCH.setMana(curCH.getMana()-a.getManaCost()) ;
-				 for(Ability ab : curCH.getAbilities() ) {
-						if(ab.getName().equals(a.getName())) {
-							ab.setCurrentCooldown(ab.getBaseCooldown());
-						}
-				 }
-				
-				 ArrayList<Damageable>potenialTargets = getDirectionalTargets(curCH,a,d);
-				 if(potenialTargets.isEmpty())
-					 return ;
-					 //throw new InvalidTargetException("Invalid Target!");
-				 ArrayList<Damageable>finalTargets = validAbilityTargets(curCH,a,potenialTargets);
-				 if(finalTargets.isEmpty())
-					 return ;
-					 //throw new InvalidTargetException("Invalid Target!");
-				  
-				
-				 
-					// added because of tests
-				 removeShieldedTargetsIfDamagingAbility(finalTargets, a) ;
-					 
-					 
-				 a.execute(finalTargets);
-				 removeDeadDamageablesAfterAttackOrAbility() ;
-				 //removeDamagedCoversAfterCastingAbility() ;
-				 
-			 }
+			
 		 }
 		
 		 
@@ -947,54 +977,57 @@ public class Game {
 	 					CloneNotSupportedException, NotEnoughResourcesException {
 		 if(a.getCastArea().equals(AreaOfEffect.SINGLETARGET)) {
 			 Champion curCH = getCurrentChampion();
-			 Point curLoc = curCH.getLocation();
-			 Object Grid [][] =  getBoard();
-			 if(!checkCanCastAbility(curCH , a)) {
-				//commented because now "checkCanCastAbility" will only return true
-				 //and if there is an Exception, it will be thrown from inside the method itself
-				 /*throw new AbilityUseException("You're in a condition that "
-				 		+ "prevents you from casting an ability") ;*/
-			 }
-			 else {
-				 Damageable potentialTarget = (Damageable)Grid[x][y];
-				 if(potentialTarget==null) {
-					 throw new InvalidTargetException("Invalid Target!");
+			 if(curCH != null){
+				 Point curLoc = curCH.getLocation();
+				 Object Grid [][] =  getBoard();
+				 if(!checkCanCastAbility(curCH , a)) {
+					//commented because now "checkCanCastAbility" will only return true
+					 //and if there is an Exception, it will be thrown from inside the method itself
+					 /*throw new AbilityUseException("You're in a condition that "
+					 		+ "prevents you from casting an ability") ;*/
 				 }
 				 else {
-					 if(a.getCastRange() < MnDist(curLoc.x,curLoc.y,x,y)) {
-						 throw new AbilityUseException("Can't use an ability");
+					 Damageable potentialTarget = (Damageable)Grid[x][y];
+					 if(potentialTarget==null) {
+						 throw new InvalidTargetException("Invalid Target!");
 					 }
 					 else {
-							ArrayList<Damageable> pTArr=new ArrayList<>(); 
-							pTArr.add(potentialTarget); 
-							ArrayList<Damageable> TargetArr= validAbilityTargets(curCH,a,pTArr);
-							if(TargetArr.isEmpty()) {
-								throw new InvalidTargetException("Invalid Target!");
-							}
-							else {
-								 curCH.setCurrentActionPoints(curCH.getCurrentActionPoints()-a.getRequiredActionPoints());
-								 curCH.setMana(curCH.getMana()-a.getManaCost()) ;
-								 for(Ability ab : curCH.getAbilities() ) {
-										if(ab.getName().equals(a.getName())) {
-											ab.setCurrentCooldown(ab.getBaseCooldown());
-										}
-								 }
-
-								 
-									// added because of tests
-								 removeShieldedTargetsIfDamagingAbility(TargetArr, a) ;
-									 
-									 
-								a.execute(TargetArr);
-								removeDeadDamageablesAfterAttackOrAbility() ;
-								//removeDamagedCoversAfterCastingAbility() ;
-							} 
-							 
+						 if(a.getCastRange() < MnDist(curLoc.x,curLoc.y,x,y)) {
+							 throw new AbilityUseException("Can't use an ability");
 						 }
+						 else {
+								ArrayList<Damageable> pTArr=new ArrayList<>(); 
+								pTArr.add(potentialTarget); 
+								ArrayList<Damageable> TargetArr= validAbilityTargets(curCH,a,pTArr);
+								if(TargetArr.isEmpty()) {
+									throw new InvalidTargetException("Invalid Target!");
+								}
+								else {
+									 curCH.setCurrentActionPoints(curCH.getCurrentActionPoints()-a.getRequiredActionPoints());
+									 curCH.setMana(curCH.getMana()-a.getManaCost()) ;
+									 for(Ability ab : curCH.getAbilities() ) {
+											if(ab.getName().equals(a.getName())) {
+												ab.setCurrentCooldown(ab.getBaseCooldown());
+											}
+									 }
+
+									 
+										// added because of tests
+									 removeShieldedTargetsIfDamagingAbility(TargetArr, a) ;
+										 
+										 
+									a.execute(TargetArr);
+									removeDeadDamageablesAfterAttackOrAbility() ;
+									//removeDamagedCoversAfterCastingAbility() ;
+								} 
+								 
+							 }
+					 }
+				
+					 	 
 				 }
-			
-				 	 
 			 }
+			
 			 			 
 		 }
 	 }
@@ -1031,43 +1064,52 @@ public class Game {
 	 
 	 public void useLeaderAbility() throws LeaderNotCurrentException, LeaderAbilityAlreadyUsedException {
 		 Champion curCH = getCurrentChampion();
-		 //if(curCH != null){
+		 if(curCH != null){
 			 Champion leader1 = getFirstPlayer().getLeader();
 			 Champion leader2 = getSecondPlayer().getLeader();
-			 ArrayList<Champion> team1 = getFirstPlayer().getTeam();
-			 ArrayList<Champion> team2 = getSecondPlayer().getTeam();
-			 
-			 if(!curCH.equals(leader1) && !curCH.equals(leader2)) {
-				 throw new LeaderNotCurrentException("This champion isn't the leader!");
-			 }
-			 else {
-				 if((curCH.equals(leader1) && isFirstLeaderAbilityUsed()) || 
-						 (curCH.equals(leader2) && isSecondLeaderAbilityUsed()) )
-					 throw new LeaderAbilityAlreadyUsedException("Leader Ability already used!");
+			 if(leader1 != null && leader2 != null){
+				 ArrayList<Champion> team1 = getFirstPlayer().getTeam();
+				 ArrayList<Champion> team2 = getSecondPlayer().getTeam();
+				 
+				 if(!curCH.equals(leader1) && !curCH.equals(leader2)) {
+					 throw new LeaderNotCurrentException("This champion isn't the leader!");
+				 }
 				 else {
-					 ArrayList<Champion>targets = new ArrayList<>();
-					 if(curCH.equals(leader1)) {
-						 targets = getLeaderTargets(curCH,leader2,team1,team2);
-						 firstLeaderAbilityUsed = true ;
-					 }
+					 if( ( curCH.equals(leader1)  && isFirstLeaderAbilityUsed()) || 
+							 (curCH.equals(leader2)&& isSecondLeaderAbilityUsed()) )
+						 throw new LeaderAbilityAlreadyUsedException("Leader Ability already used!");
 					 else {
-						 targets = getLeaderTargets(curCH,leader2,team2,team1);
-						 secondLeaderAbilityUsed = true ;
+						 ArrayList<Champion>targets = new ArrayList<>();
+						 if(curCH.equals(leader1)) {
+							 targets = getLeaderTargets(curCH,leader2,team1,team2);
+							 firstLeaderAbilityUsed = true ;
+						 }
+						 else {
+							 targets = getLeaderTargets(curCH,leader1,team2,team1);
+							 secondLeaderAbilityUsed = true ;
+						 }
+						 curCH.useLeaderAbility(targets);
 					 }
-					 curCH.useLeaderAbility(targets);
 				 }
 			 }
-		 //}
+			
+		 }
+		
 		 
 	 }
 	 public boolean update(Champion c , Condition oldCondition) {
 		 boolean res = true ;
+		 ArrayList<Effect> toBeRemovedEf = new ArrayList<>() ;
 		 for(/*Effect e : c.getAppliedEffects()*/ int i=0 ; i<c.getAppliedEffects().size() ; i++) {
 			 Effect e = c.getAppliedEffects().get(i) ;
 			 e.setDuration(e.getDuration() -1);
 			 if(e.getDuration() == 0) {
-				 e.remove(c);
+				 toBeRemovedEf.add(e) ;
+				 //e.remove(c);
 			 }
+		 }
+		 for(Effect e : toBeRemovedEf ){
+			 e.remove(c);
 		 }
 		 for(Ability a : c.getAbilities()) {
 			 a.setCurrentCooldown(a.getCurrentCooldown() -1);
@@ -1090,19 +1132,23 @@ public class Game {
 		 if(turnOrder.isEmpty()) {
 			 prepareChampionTurns() ;
 		 }
+		 
+			
 		 while(!turnOrder.isEmpty()) {
 			 Champion curCH = (Champion) turnOrder.peekMin() ;
 			 boolean isINACTIVE = false;
 			 if(curCH.getCondition().equals(Condition.INACTIVE)) {
-				 /*Champion removedCurrentlyCH = (Champion)*/ getTurnOrder().remove() ;
+				 getTurnOrder().remove() ;
 				 isINACTIVE = true;
 			 }
-			 //toBreeak indicates that the Champion is NOT knockedOut
+				 //toBreeak indicates that the Champion is NOT knockedOut
 			 boolean toBreak = update(curCH , curCH.getCondition()) ;
 			 if(toBreak && !isINACTIVE) {
 				 break ;
 			 }
 		 }
+		 
+		
 	 }
 	 
 	 private void prepareChampionTurns() {

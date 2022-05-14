@@ -24,6 +24,7 @@ public class CrowdControlAbility extends Ability {
 				Champion c = (Champion) da ;
 				Effect e = (Effect) (this.getEffect().clone()) ;
 				e.apply(c);
+				c.getAppliedEffects().add(e) ;
 				/*for(Ability a : c.getAbilities() ) {
 					if(a.equals(this)) {
 						a.setCurrentCooldown(a.getBaseCooldown());

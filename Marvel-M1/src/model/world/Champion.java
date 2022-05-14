@@ -2,6 +2,7 @@ package model.world;
 
 import java.awt.Point;
 import java.util.ArrayList;
+
 import model.abilities.Ability;
 import model.effects.Effect;
 
@@ -19,6 +20,7 @@ public abstract class Champion implements Damageable , Comparable<Champion> {
 	private ArrayList<Effect> appliedEffects;
 	private Condition condition;
 	private Point location;
+	
 	
 
 	public Champion(String name, int maxHP, int mana, int actions, int speed, int attackRange, int attackDamage) {

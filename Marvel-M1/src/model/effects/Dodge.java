@@ -11,7 +11,10 @@ public class Dodge extends Effect {
 		
 	}
 	public void apply(Champion c){
-		c.getAppliedEffects().add(this) ;
+		
+		//commented because of public tests
+		//c.getAppliedEffects().add(this) ;
+		
 		//int rand = (int) (Math.random()*2) ;
 		int s = c.getSpeed() ;
 		c.setSpeed( (int) ( s+ (0.05*s))) ;

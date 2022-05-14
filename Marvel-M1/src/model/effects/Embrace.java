@@ -11,7 +11,10 @@ public class Embrace extends Effect {
 		super("Embrace", duration, EffectType.BUFF);
 	}
 	public void apply(Champion c){
-		c.getAppliedEffects().add(this) ;
+		
+		//commented because of public tests
+		//c.getAppliedEffects().add(this) ;
+		
 		int incHP = (int) (0.2 * c.getMaxHP()) ;
 		c.setCurrentHP(c.getCurrentHP() + incHP); 
 		int incM = (int) (0.2 * c.getMana()) ;

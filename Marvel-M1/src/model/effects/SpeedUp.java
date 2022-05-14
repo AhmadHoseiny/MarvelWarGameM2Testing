@@ -8,7 +8,10 @@ public class SpeedUp extends Effect{
 		super("SpeedUp",duration,EffectType.BUFF);
 	}
 	public void apply(Champion c){
-		c.getAppliedEffects().add(this);
+		
+		//commented because of public tests
+		//c.getAppliedEffects().add(this);
+		
 		int incSP = (int)(c.getSpeed() + c.getSpeed()*0.15);
 		c.setSpeed(incSP);
 		c.setCurrentActionPoints(c.getCurrentActionPoints() +1);

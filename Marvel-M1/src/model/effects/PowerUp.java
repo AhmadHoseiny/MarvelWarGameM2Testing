@@ -13,7 +13,10 @@ public class PowerUp extends Effect {
 		
 	}
 	public void apply(Champion c){
-		c.getAppliedEffects().add(this) ;
+		
+		//commented because of public tests
+		//c.getAppliedEffects().add(this) ;
+		
 		ArrayList<Ability> curA = c.getAbilities() ;
 		for(Ability a : curA ){
 			if(a instanceof DamagingAbility){

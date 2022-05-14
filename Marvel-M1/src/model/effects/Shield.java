@@ -11,7 +11,10 @@ public class Shield extends Effect {
 		
 	}
 	public void apply(Champion c){
-		c.getAppliedEffects().add(this);
+		
+		//commented because of public tests
+		//c.getAppliedEffects().add(this);
+		
 		//temp = c.getSpeed();
 		int incsp = (int) (c.getSpeed() + c.getSpeed()*0.02);
 		c.setSpeed(incsp);

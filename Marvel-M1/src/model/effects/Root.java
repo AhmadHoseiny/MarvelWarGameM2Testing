@@ -16,7 +16,10 @@ public class Root extends Effect {
 		
 	}
 	public void apply(Champion c){
-		c.getAppliedEffects().add(this);
+		
+		//commented because of public tests
+		//c.getAppliedEffects().add(this);
+		
 		//temp = c.getCondition();
 		if(!c.getCondition().equals(Condition.INACTIVE)){
 			c.setCondition(Condition.ROOTED);
@@ -26,7 +29,12 @@ public class Root extends Effect {
 	}
 	public void remove(Champion c){
 		c.getAppliedEffects().remove(this);
-		setOldCondition(c);
+		//setOldCondition(c);
+		if(! c.getCondition().equals(Condition.INACTIVE)){
+			if(!c.getCondition().equals(Condition.ROOTED)){
+				c.setCondition(Condition.ACTIVE);
+			}
+		}
 	}
 		
 			
