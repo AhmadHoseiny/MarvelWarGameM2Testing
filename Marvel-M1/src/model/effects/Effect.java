@@ -35,8 +35,10 @@ public abstract class Effect implements Cloneable {
 	}
 	public abstract void apply(Champion c) ;
 	public abstract void remove(Champion c) ;
+	
 	public void setOldCondition(Champion c) {
 		ArrayList<Effect> Effects = c.getAppliedEffects();
+		
 		boolean f1I = false;
 		boolean f2R = false;
 		for(Effect e : Effects) {

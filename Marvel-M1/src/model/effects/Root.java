@@ -29,12 +29,14 @@ public class Root extends Effect {
 	}
 	public void remove(Champion c){
 		c.getAppliedEffects().remove(this);
-		//setOldCondition(c);
-		if(! c.getCondition().equals(Condition.INACTIVE)){
+		setOldCondition(c);
+	
+		/*if(! c.getCondition().equals(Condition.INACTIVE)){
 			if(!c.getCondition().equals(Condition.ROOTED)){
 				c.setCondition(Condition.ACTIVE);
 			}
-		}
+		}*/
+		
 	}
 		
 			

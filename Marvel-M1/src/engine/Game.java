@@ -54,6 +54,7 @@ public class Game {
 		turnOrder = new PriorityQueue(6);
 		placeChampions();
 		placeCovers();
+		prepareChampionTurns();
 	}
 
 	public static void loadAbilities(String filePath) throws IOException {
@@ -253,14 +254,14 @@ public class Game {
 	public static int MnDist(int x1, int y1 , int x2 , int y2) {
 		return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 	}
-	 public Champion getCurrentChampion() {
-		 if(!turnOrder.isEmpty()){
+	 public Champion getCurrentChampion()  {
+		 //if(!turnOrder.isEmpty()){
 			 return (Champion)(turnOrder.peekMin());
 		
-		 }
+		 /*}
 		 else{
 			 return null ;
-		 }
+		 }*/
 		 
 	 }
 	 public Player checkGameOver() {
@@ -1050,7 +1051,7 @@ public class Game {
 						 res.add(c);
 				 }
 				 for(Champion c : oppTeam ) {
-					 if(!c.equals(oppLea))
+					 if(!c.equals(oppLea) )
 						 res.add(c);
 				 }
 			 }
@@ -1063,7 +1064,12 @@ public class Game {
 	 
 	 
 	 public void useLeaderAbility() throws LeaderNotCurrentException, LeaderAbilityAlreadyUsedException {
+		 //System.out.println(turnOrder.size());
+		 /*if(turnOrder.size()==0) {
+			 return ;
+		 }*/
 		 Champion curCH = getCurrentChampion();
+		 
 		 if(curCH != null){
 			 Champion leader1 = getFirstPlayer().getLeader();
 			 Champion leader2 = getSecondPlayer().getLeader();
@@ -1082,10 +1088,16 @@ public class Game {
 						 ArrayList<Champion>targets = new ArrayList<>();
 						 if(curCH.equals(leader1)) {
 							 targets = getLeaderTargets(curCH,leader2,team1,team2);
+							 if(targets.isEmpty()) {
+								 return ;
+							 }
 							 firstLeaderAbilityUsed = true ;
 						 }
 						 else {
 							 targets = getLeaderTargets(curCH,leader1,team2,team1);
+							 if(targets.isEmpty()) {
+								 return ;
+							 }
 							 secondLeaderAbilityUsed = true ;
 						 }
 						 curCH.useLeaderAbility(targets);
@@ -1097,8 +1109,8 @@ public class Game {
 		
 		 
 	 }
-	 public boolean update(Champion c , Condition oldCondition) {
-		 boolean res = true ;
+	 public void update(Champion c , Condition oldCondition) {
+		 //boolean res = true ;
 		 ArrayList<Effect> toBeRemovedEf = new ArrayList<>() ;
 		 for(/*Effect e : c.getAppliedEffects()*/ int i=0 ; i<c.getAppliedEffects().size() ; i++) {
 			 Effect e = c.getAppliedEffects().get(i) ;
@@ -1115,7 +1127,7 @@ public class Game {
 			 a.setCurrentCooldown(a.getCurrentCooldown() -1);
 		 }
 		 c.setCurrentActionPoints(c.getMaxActionPointsPerTurn());
-		 if(c.getCurrentHP()==0) {
+		 /*if(c.getCurrentHP()==0) {
 			 c.setCondition(Condition.KNOCKEDOUT);
 			 Point locToBeEmptied = c.getLocation() ;
 			 Object [][] Grid = getBoard() ;
@@ -1124,17 +1136,16 @@ public class Game {
 				 turnOrder.remove() ;
 			 }
 			 res = false ;
-		 }
-		 return res ;
+		 }*/
+		// return res ;
 	 }
 	 public void endTurn() {
 		 Champion removedCH = (Champion) getTurnOrder().remove() ;
 		 if(turnOrder.isEmpty()) {
 			 prepareChampionTurns() ;
 		 }
-		 
 			
-		 while(!turnOrder.isEmpty()) {
+		 while(/* !turnOrder.isEmpty()*/  turnOrder.size()>=1) {
 			 Champion curCH = (Champion) turnOrder.peekMin() ;
 			 boolean isINACTIVE = false;
 			 if(curCH.getCondition().equals(Condition.INACTIVE)) {
@@ -1142,8 +1153,8 @@ public class Game {
 				 isINACTIVE = true;
 			 }
 				 //toBreeak indicates that the Champion is NOT knockedOut
-			 boolean toBreak = update(curCH , curCH.getCondition()) ;
-			 if(toBreak && !isINACTIVE) {
+			 /*boolean toBreak =*/ update(curCH , curCH.getCondition()) ;
+			 if(/*toBreak &&*/ !isINACTIVE) {
 				 break ;
 			 }
 		 }

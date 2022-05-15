@@ -30,6 +30,12 @@ public class Hero extends Champion {
 			newE.apply(c);
 			c.getAppliedEffects().add(newE) ;
 		}
+		/*for(Champion c : targets) {
+			for(Effect e : c.getAppliedEffects()) {
+				System.out.print(e.getName()+ " ");
+			}
+			System.out.println("______");
+		}*/
 	}
 	
 }
