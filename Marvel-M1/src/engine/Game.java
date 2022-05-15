@@ -477,6 +477,7 @@ public class Game {
 		// ArrayList <Effect> toBeRemoved = new ArrayList<>() ;
 		 for(Effect e : target.getAppliedEffects()) {
 			 if(e instanceof Shield) {
+				 target.getAppliedEffects().remove(e) ;
 				 e.remove(target); // according to shield effect explanation
 				 return false; 
 			 }
@@ -583,6 +584,7 @@ public class Game {
 			}
 			for(int i=0 ; i<toBeRemovedCH.size() && i<toBeRemovedEf.size() ; i++){
 				targets.remove(toBeRemovedCH.get(i)) ;
+				toBeRemovedCH.get(i).getAppliedEffects().remove(toBeRemovedEf.get(i)) ;
 				toBeRemovedEf.get(i).remove(toBeRemovedCH.get(i));
 			}
 		 
@@ -613,10 +615,10 @@ public class Game {
 		if(c.getMana() < a.getManaCost() || c.getCurrentActionPoints() < a.getRequiredActionPoints()
 				) 
 			throw new NotEnoughResourcesException("Not Enough Resources") ;
-		if(c.getCondition().equals(Condition.INACTIVE) || 
-				c.getCondition().equals(Condition.KNOCKEDOUT) || 
-				a.getCurrentCooldown()>0 ||
-				!c.getAbilities().contains(a)) /* last condition may be 7anyka*/{
+		if(/*c.getCondition().equals(Condition.INACTIVE) || 
+				c.getCondition().equals(Condition.KNOCKEDOUT) || */
+				a.getCurrentCooldown()>0 /*||
+				!c.getAbilities().contains(a)*/) {
 			throw new AbilityUseException("can't currenty use Ability") ;
 		}
 		ArrayList<Effect> Effects= c.getAppliedEffects();
@@ -1044,7 +1046,10 @@ public class Game {
 		 }
 		 else {
 			 if(curLea instanceof Villain)
-				 res = oppTeam;
+				 for(Champion c : oppTeam){
+					res.add(c) ; 
+				 }
+				 //res = oppTeam;
 			 else {
 				 for(Champion c : curTeam ) {
 					 if(!c.equals(curLea))
@@ -1121,6 +1126,7 @@ public class Game {
 			 }
 		 }
 		 for(Effect e : toBeRemovedEf ){
+			 c.getAppliedEffects().remove(e) ;
 			 e.remove(c);
 		 }
 		 for(Ability a : c.getAbilities()) {

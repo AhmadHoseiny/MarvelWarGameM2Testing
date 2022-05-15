@@ -20,7 +20,7 @@ public class Stun extends Effect {
 		// not finished yet 
 	}
 	public void remove(Champion c){
-		c.getAppliedEffects().remove(this);
+		//c.getAppliedEffects().remove(this);
 		setOldCondition(c);
 		/*if(! c.getCondition().equals(Condition.INACTIVE)){
 			if(!c.getCondition().equals(Condition.ROOTED)){

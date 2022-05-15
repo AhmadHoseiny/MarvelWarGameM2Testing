@@ -21,7 +21,7 @@ public class Disarm extends Effect {
 		// almost finished  
 	}
 	public void remove(Champion c){
-		c.getAppliedEffects().remove(this) ;
+		//c.getAppliedEffects().remove(this) ;
 		//c.setAttackDamage(tempAD);
 		ArrayList<Ability> curA = c.getAbilities() ;
 		ArrayList<Ability> toBeRemoved = new ArrayList<>() ;

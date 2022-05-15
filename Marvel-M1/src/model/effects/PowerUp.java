@@ -33,7 +33,7 @@ public class PowerUp extends Effect {
 		// not finished yet 
 	}
 	public void remove(Champion c){
-		c.getAppliedEffects().remove(this) ;
+		//c.getAppliedEffects().remove(this) ;
 		ArrayList<Ability> curA = c.getAbilities() ;
 		for(Ability a : curA ){
 			if(a instanceof DamagingAbility){

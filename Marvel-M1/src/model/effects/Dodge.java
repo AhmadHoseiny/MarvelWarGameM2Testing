@@ -21,7 +21,7 @@ public class Dodge extends Effect {
 		// almost finished 
 	}
 	public void remove(Champion c){
-		c.getAppliedEffects().remove(this) ;
+		//c.getAppliedEffects().remove(this) ;
 		//int decS = (int) (c.getSpeed() /1.05) ; 
 		c.setSpeed((int)(c.getSpeed()/1.05)) ;
 		//not finished yet 

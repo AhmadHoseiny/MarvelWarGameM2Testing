@@ -24,6 +24,7 @@ public class Hero extends Champion {
 				}		
 			}
 			for(Effect e : toBeRemovedEf){
+				c.getAppliedEffects().remove(e) ;
 				e.remove(c) ;
 			}
 			Effect newE = new Embrace(2);
